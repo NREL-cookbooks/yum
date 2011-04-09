@@ -13,8 +13,5 @@ if platform?("redhat", "centos", "fedora")
     owner "root"
     group "root"
     mode "0644"
-    variables({
-      :platform => node[:kernel][:machine]
-    })
   end
 end
