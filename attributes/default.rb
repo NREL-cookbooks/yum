@@ -1,7 +1,8 @@
 #
 # Cookbook Name:: yum
-# Recipe:: default
+# Attributes:: default 
 #
+# Copyright 2011, Eric G. Wolfe 
 # Copyright 2011, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,4 +18,6 @@
 # limitations under the License.
 #
 
-# execute "yum update -y"
+# Example: override.yum.exclude = "kernel* compat-glibc*"
+default[:yum][:exclude]
+default[:yum][:installonlypkgs]

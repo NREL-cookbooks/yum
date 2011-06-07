@@ -8,10 +8,8 @@
 #
 
 if platform?("redhat", "centos", "fedora")
-  template "/etc/yum.repos.d/10gen.repo" do
-    source "10gen.repo.erb"
-    owner "root"
-    group "root"
-    mode "0644"
+  yum_repository "10gen" do
+    description "10gen Repository"
+    url "http://downloads-distro.mongodb.org/repo/redhat/os/$basearch"
   end
 end

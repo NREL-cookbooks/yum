@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: yum
-# Recipe:: default
+# Resource:: key
 #
 # Copyright 2011, Opscode, Inc.
 #
@@ -17,4 +17,7 @@
 # limitations under the License.
 #
 
-# execute "yum update -y"
+actions :add, :remove
+
+attribute :key, :kind_of => String, :name_attribute => true
+attribute :url, :kind_of => String, :default => nil

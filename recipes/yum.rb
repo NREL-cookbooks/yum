@@ -1,7 +1,8 @@
 #
 # Cookbook Name:: yum
-# Recipe:: default
+# Recipe:: yum 
 #
+# Copyright 2011, Eric G. Wolfe
 # Copyright 2011, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,4 +18,6 @@
 # limitations under the License.
 #
 
-# execute "yum update -y"
+template "/etc/yum.conf" do
+  source "yum-rhel#{node[:platform_version].to_i}.conf.erb"
+end

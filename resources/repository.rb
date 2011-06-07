@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: yum
-# Recipe:: default
+# Resource:: repository
 #
 # Copyright 2011, Opscode, Inc.
 #
@@ -17,4 +17,15 @@
 # limitations under the License.
 #
 
-# execute "yum update -y"
+actions :add, :remove
+
+#name of the repo, used for .repo filename
+attribute :repo_name, :kind_of => String, :name_attribute => true
+attribute :description, :kind_of => String #long description
+attribute :url, :kind_of => String
+attribute :mirrorlist, :default => false
+attribute :key, :kind_of => String, :default => nil
+attribute :enabled, :default => 1
+attribute :type, :kind_of => String, :default => nil
+attribute :failovermethod, :kind_of => String, :default => nil
+attribute :bootstrapurl, :kind_of => String, :default => nil
