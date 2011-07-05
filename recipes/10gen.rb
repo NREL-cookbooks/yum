@@ -9,6 +9,7 @@
 
 if platform?("redhat", "centos", "fedora")
   yum_repository "10gen" do
+    action :add
     description "10gen Repository"
     url "http://downloads-distro.mongodb.org/repo/redhat/os/$basearch"
   end
