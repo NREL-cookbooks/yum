@@ -1,20 +1,34 @@
 #
+# Author:: Joshua Timberman (<joshua@opscode.com>)
 # Cookbook Name:: yum
 # Recipe:: epel
 #
-# Copyright 2010, NREL
+# Copyright:: Copyright (c) 2011 Opscode, Inc.
 #
-# All rights reserved - Do Not Redistribute
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-if platform?("redhat", "centos", "fedora")
-  remote_file "#{Chef::Config[:file_cache_path]}/epel-release-6-5.noarch.rpm" do
-    source "http://download.fedora.redhat.com/pub/epel/beta/6/i386/epel-release-6-5.noarch.rpm"
-    checksum "28aacc55514d080d0813b1598c4a6a708b064bef0a373aacb60eaa16998d157b"
-  end
+major = node['platform_version'].to_i
+epel  = node['yum']['epel_release']
 
-  package "epel-release" do
-    source "#{Chef::Config[:file_cache_path]}/epel-release-6-5.noarch.rpm"
-    options "--nogpgcheck" 
-  end
+# If rpm installation from a URL supported 302's, we'd just use that.
+# Instead, we get to remote_file then rpm_package.
+
+remote_file "#{Chef::Config[:file_cache_path]}/epel-release-#{epel}.noarch.rpm" do
+  source "http://download.fedoraproject.org/pub/epel/#{major}/i386/epel-release-#{epel}.noarch.rpm"
+  not_if "rpm -qa | grep -qx 'epel-release-#{epel}'"
+end
+
+
+rpm_package "epel-release" do
+  source "#{Chef::Config[:file_cache_path]}/epel-release-#{epel}.noarch.rpm"
 end
