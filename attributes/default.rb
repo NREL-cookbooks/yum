@@ -22,6 +22,7 @@
 default[:yum][:exclude]
 default[:yum][:installonlypkgs]
 
+default[:yum][:distro][:exclude] = []
 
 default['yum']['epel_release'] = case node['platform_version'].to_i
                                   when 6
@@ -30,4 +31,8 @@ default['yum']['epel_release'] = case node['platform_version'].to_i
                                     "5-4"
                                   when 4
                                     "4-10"
+                                  end
+
+default[:yum][:pgdg][:release] =  if(node[:platform] == "redhat" && node[:platform_version].to_i == 6)
+                                    5
                                   end
