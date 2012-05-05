@@ -7,38 +7,43 @@
 # All rights reserved - Do Not Redistribute
 #
 
+node.set[:yum][:exclude] = node[:yum][:exclude] + ["postgresql*"]
+include_recipe "yum::yum"
+
+major = node[:platform_version].to_i
+
+root_distro = node[:platform]
+root_distro_short = node[:platform]
 if platform?("redhat", "centos", "scientific", "fedora")
-  node.set[:yum][:distro][:exclude] = ["postgresql*"]
-  include_recipe "yum::distro"
+  root_distro_short = "rhel"
+end
 
-  major = node[:platform_version].to_i
+distro = node[:platform]
+if platform?("scientific")
+  distro = "sl"
+end
 
-  root_distro = node[:platform]
-  root_distro_short = node[:platform]
-  if platform?("redhat", "centos", "scientific", "fedora")
-    root_distro_short = "rhel"
-  end
+version = node[:postgresql][:version]
+version_no_dot = version.gsub(/\./, "")
+node.set[:postgresql][:version_no_dot] = version_no_dot
 
-  distro = node[:platform]
-  if platform?("scientific")
-    distro = "sl"
-  end
+package_name = "pgdg-#{distro}#{version_no_dot}"
+rpm_name = "#{package_name}-#{version}-#{node[:yum][:pgdg_release]}.noarch"
+rpm = "#{rpm_name}.rpm"
 
-  version = node[:postgresql][:version]
-  version_no_dot = version.gsub(/\./, "")
-  node.set[:postgresql][:version_no_dot] = version_no_dot
+remote_file "#{Chef::Config[:file_cache_path]}/#{rpm}" do
+  source "http://yum.postgresql.org/#{version}/#{root_distro}/#{root_distro_short}-#{major}-#{node[:kernel][:machine]}/#{rpm}"
+  not_if "rpm -qa | grep -q '^#{package_name}-#{version}'"
+end
 
-  package_name = "pgdg-#{distro}#{version_no_dot}"
-  rpm_name = "#{package_name}-#{version}-#{node[:yum][:pgdg][:release]}.noarch"
-  rpm = "#{rpm_name}.rpm"
+yum_package(package_name) do
+  source "#{Chef::Config[:file_cache_path]}/#{rpm}"
+  flush_cache [:after]
+  only_if {::File.exists?("#{Chef::Config[:file_cache_path]}/#{rpm}")}
+  action :nothing
+end
 
-  remote_file "#{Chef::Config[:file_cache_path]}/#{rpm}" do
-    source "http://yum.postgresql.org/#{version}/#{root_distro}/#{root_distro_short}-#{major}-#{node[:kernel][:machine]}/#{rpm}"
-    not_if "rpm -qa | grep -qx '#{rpm_name}'"
-  end
-
-  rpm_package(package_name) do
-    source "#{Chef::Config[:file_cache_path]}/#{rpm}"
-    not_if "rpm -qa | grep -qx '#{rpm_name}'"
-  end
+file "#{package_name}-cleanup" do
+  path "#{Chef::Config[:file_cache_path]}/#{rpm}"
+  action :delete
 end

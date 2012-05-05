@@ -7,30 +7,28 @@
 # All rights reserved - Do Not Redistribute
 #
 
-rpm_name = "nginx-release"
+package_name = "nginx-release"
 platform = node[:platform]
 if(platform == "redhat")
   platform = "rhel"
 end
 major = node[:platform_version].to_i
 
-rpm = "#{rpm_name}-#{platform}-#{major}-0.el#{major}.ngx.noarch.rpm"
+rpm = "#{package_name}-#{platform}-#{major}-0.el#{major}.ngx.noarch.rpm"
 
 remote_file "#{Chef::Config[:file_cache_path]}/#{rpm}" do
   source "http://nginx.org/packages/#{platform}/#{major}/noarch/RPMS/#{rpm}"
-  not_if "rpm -qa | grep -qx '#{rpm_name}'"
+  not_if "rpm -qa | grep -q '^#{package_name}-#{platform}-#{major}'"
 end
 
-# Internal cache needs to be reloaded, so the new packages are found:
-# http://tickets.opscode.com/browse/COOK-1227
-ruby_block "reload-internal-yum-cache" do
-  block do
-    Chef::Provider::Package::Yum::YumCache.instance.reload
-  end
+yum_package(package_name) do
+  source "#{Chef::Config[:file_cache_path]}/#{rpm}"
+  flush_cache [:after]
+  only_if {::File.exists?("#{Chef::Config[:file_cache_path]}/#{rpm}")}
   action :nothing
 end
 
-rpm_package(rpm_name) do
-  source "#{Chef::Config[:file_cache_path]}/#{rpm}"
-  notifies :create, "ruby_block[reload-internal-yum-cache]", :immediately
+file "#{package_name}-cleanup" do
+  path "#{Chef::Config[:file_cache_path]}/#{rpm}"
+  action :delete
 end

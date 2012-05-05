@@ -1,19 +1,21 @@
 #
 # Cookbook Name:: yum
-# Recipe:: varnish
+# Recipe:: rpmforge
 #
 # Copyright 2012, NREL
 #
 # All rights reserved - Do Not Redistribute
 #
 
-package_name = "varnish-release"
-varnish = node[:yum][:varnish_release]
-rpm = "#{package_name}-#{varnish}.noarch.rpm"
+package_name = "rpmforge-release"
+major = node['platform_version'].to_i
+rpmforge = node['yum']['rpmforge_release']
+arch = node[:kernel][:machine]
+rpm = "#{package_name}-#{rpmforge}.el#{major}.rf.#{arch}.rpm"
 
 remote_file "#{Chef::Config[:file_cache_path]}/#{rpm}" do
-  source "http://repo.varnish-cache.org/redhat/varnish-3.0/el5/noarch/#{rpm}"
-  not_if "rpm -qa | grep -q '^#{package_name}-#{varnish}'"
+  source "http://pkgs.repoforge.org/rpmforge-release/#{rpm}"
+  not_if "rpm -qa | grep -q '^#{package_name}-#{rpmforge}'"
 end
 
 yum_package package_name do
