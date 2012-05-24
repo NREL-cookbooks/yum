@@ -22,7 +22,8 @@ yum_package package_name do
   source "#{Chef::Config[:file_cache_path]}/#{rpm}"
   flush_cache [:after]
   only_if {::File.exists?("#{Chef::Config[:file_cache_path]}/#{rpm}")}
-  action :nothing
+  # FIXME: Issue with chef 0.10.10: http://tickets.opscode.com/browse/CHEF-3135
+  #action :nothing
 end
 
 file "#{package_name}-cleanup" do

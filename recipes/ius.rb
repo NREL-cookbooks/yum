@@ -31,7 +31,8 @@ end
 rpm_package "ius-release" do
   source "#{Chef::Config[:file_cache_path]}/ius-release-#{ius}.ius.el#{major}.noarch.rpm"
   only_if {::File.exists?("#{Chef::Config[:file_cache_path]}/ius-release-#{ius}.ius.el#{major}.noarch.rpm")}
-  action :nothing
+  # FIXME: Issue with chef 0.10.10: http://tickets.opscode.com/browse/CHEF-3135
+  #action :nothing
 end
 
 file "ius-release-cleanup" do
