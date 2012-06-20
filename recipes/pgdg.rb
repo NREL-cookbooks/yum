@@ -7,8 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
-node.set[:yum][:exclude] = node[:yum][:exclude] + ["postgresql*"]
-include_recipe "yum::yum"
+node.set[:yum][:exclude] = (node[:yum][:exclude] + ["postgresql*"]).uniq
+include_recipe "yum::distro"
 
 major = node[:platform_version].to_i
 
