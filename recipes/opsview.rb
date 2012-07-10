@@ -11,7 +11,7 @@ if platform?("redhat", "centos", "fedora")
   yum_repository "opsview" do
     action :add
     description "Opsview"
-    url "http://downloads.opsera.com/opsview-community/latest/yum/rhel/$releasever/$basearch"
+    url "http://downloads.opsview.com/opsview-core/latest/yum/rhel/$releasever/$basearch"
     enabled "1"
   end
 end
