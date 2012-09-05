@@ -22,6 +22,8 @@
 default['yum']['exclude'] = Array.new
 default['yum']['installonlypkgs'] = Array.new
 
+default[:yum][:distro][:exclude] = Array.new
+
 default['yum']['epel_release'] = case node['platform_version'].to_i
                                   when 6
                                     "6-7"
@@ -30,5 +32,20 @@ default['yum']['epel_release'] = case node['platform_version'].to_i
                                   when 4
                                     "4-10"
                                   end
-default['yum']['ius_release'] = '1.0-8'
+default['yum']['ius_release'] = '1.0-10'
 default['yum']['repoforge_release'] = '0.5.2-2'
+
+default[:yum][:pgdg_release] =  case node[:platform_version].to_i
+                                  when 6 
+                                    case node[:platform]
+                                    when "redhat"
+                                      5
+                                    when "centos"
+                                      4
+                                    when "scientific"
+                                      6
+                                    end
+                                  end
+
+default[:yum][:rpmforge_release] = "0.5.2-2"
+default[:yum][:varnish_release] = "3.0-1"

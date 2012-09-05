@@ -1,0 +1,14 @@
+[main]
+enabled = 1
+gpgcheck = 1
+<%- unless node[:yum][:distro][:exclude].empty? %>
+exclude=<%= node[:yum][:distro][:exclude].join(" ") %>
+<%- end %>
+
+# You can specify options per channel, e.g.:
+#
+#[rhel-i386-server-5]
+#enabled = 1
+#
+#[some-unsigned-custom-channel]
+#gpgcheck = 0
