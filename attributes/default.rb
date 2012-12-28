@@ -41,5 +41,4 @@ default[:yum][:pgdg_release] =  case node[:platform_version].to_i
                                     end
                                   end
 
-default[:yum][:rpmforge_release] = "0.5.2-2"
 default[:yum][:varnish_release] = "3.0-1"
