@@ -1,9 +1,9 @@
 #
-# Author:: Joshua Timberman (<joshua@opscode.com>)
-# Cookbook Name:: yum
-# Recipe:: ius
+# Cookbook Name:: yumrepo
+# Attributes:: ius
 #
-# Copyright:: Copyright (c) 2011 Opscode, Inc.
+# Copyright 2011, Eric G. Wolfe
+# Copyright 2011, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,17 +16,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-include_recipe "yum::epel"
-
-yum_key node['yum']['ius']['key'] do
-  url  node['yum']['ius']['key_url']
-  action :add
+version = node['platform_version'].to_i
+case node['platform']
+when "amazon"
+  version = 6
 end
 
-yum_repository "ius" do
-  description "IUS Community Packages for Enterprise Linux"
-  key node['yum']['ius']['key']
-  mirrorlist node['yum']['ius']['url']
-  action platform?('amazon') ? [:add, :update] : :add
-end
+default['yum']['ius']['url'] = "http://dmirr.iuscommunity.org/mirrorlist/?repo=ius-el#{version}&arch=$basearch"
+default['yum']['ius']['key'] = "IUS-COMMUNITY-GPG-KEY"
+default['yum']['ius']['key_url'] = "http://dl.iuscommunity.org/pub/ius/#{node['yum']['ius']['key']}"
