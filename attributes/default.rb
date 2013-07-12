@@ -21,11 +21,13 @@
 # Example: override.yum.exclude = "kernel* compat-glibc*"
 default['yum']['exclude'] = Array.new
 default['yum']['installonlypkgs'] = Array.new
-default['yum']['ius_release'] = '1.0-10'
+default['yum']['ius_release'] = '1.0-11'
 default['yum']['repoforge_release'] = '0.5.2-2'
 default['yum']['proxy'] = ''
 default['yum']['proxy_username'] = ''
 default['yum']['proxy_password'] = ''
+default['yum']['cachedir'] = '/var/cache/yum'
+default['yum']['keepcache'] = 0
 
 default[:yum][:distro][:exclude] = Array.new
 

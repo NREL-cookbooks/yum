@@ -1,9 +1,8 @@
 #
-# Author:: Takeshi KOMIYA (<i.tkomiya@gmail.com>)
 # Cookbook Name:: yum
-# Recipe:: remi
+# Recipe:: elrepo
 #
-# Copyright:: Copyright (c) 2011 Opscode, Inc.
+# Copyright:: Copyright (c) 2013 Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,19 +16,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe "yum::epel"
-
-yum_key node['yum']['remi']['key'] do
-  url  node['yum']['remi']['key_url']
+yum_key node['yum']['elrepo']['key'] do
+  url  node['yum']['elrepo']['key_url']
   action :add
 end
 
-yum_repository "remi" do
-  description "Les RPM de remi pour Enterprise Linux #{node['platform_version']} - $basearch"
-  key node['yum']['remi']['key']
-  mirrorlist node['yum']['remi']['url']
-  failovermethod "priority"
-  includepkgs node['yum']['remi']['includepkgs']
-  exclude node['yum']['remi']['exclude']
+yum_repository "elrepo" do
+  description "ELRepo.org Community Enterprise Linux Extras Repository"
+  key node['yum']['elrepo']['key']
+  mirrorlist node['yum']['elrepo']['url']
+  includepkgs node['yum']['elrepo']['includepkgs']
+  exclude node['yum']['elrepo']['exclude']
   action :create
 end
