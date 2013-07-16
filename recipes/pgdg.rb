@@ -34,14 +34,13 @@ rpm = "#{rpm_name}.rpm"
 remote_file "#{Chef::Config[:file_cache_path]}/#{rpm}" do
   source "http://yum.postgresql.org/#{version}/#{root_distro}/#{root_distro_short}-#{major}-#{node[:kernel][:machine]}/#{rpm}"
   not_if "rpm -qa | grep -q '^#{package_name}-#{version}'"
+  notifies :install, "rpm_package[#{package_name}]", :immediately
 end
 
-yum_package(package_name) do
+rpm_package(package_name) do
   source "#{Chef::Config[:file_cache_path]}/#{rpm}"
-  flush_cache [:after]
   only_if {::File.exists?("#{Chef::Config[:file_cache_path]}/#{rpm}")}
-  # FIXME: Issue with chef 0.10.10: http://tickets.opscode.com/browse/CHEF-3135
-  #action :nothing
+  action :nothing
 end
 
 file "#{package_name}-cleanup" do
