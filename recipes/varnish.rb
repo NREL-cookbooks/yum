@@ -8,7 +8,7 @@
 #
 
 yum_repository "varnish" do
-  description "Varnish 3.0 for Enterprise Linux"
+  description "Varnish 3.0 for Enterprise Linux el6 - $basearch"
   url node['yum']['varnish']['url']
-  action platform?('amazon') ? [:add, :update] : :add
+  action :create
 end
