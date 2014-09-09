@@ -39,3 +39,33 @@ file "repoforge-release-cleanup" do
   path "#{Chef::Config[:file_cache_path]}/rpmforge-release-#{repoforge}.el#{major}.rf.#{arch}.rpm"
   action :delete
 end
+
+# Disable all the repoforge repos by default. We've run into enough conflicts
+# of packages from repoforge with epel, that we only want repoforge packages
+# when we explicitly enable it.
+yum_repository "rpmforge" do
+  description "RHEL $releasever - RPMforge.net - dag"
+  url "http://apt.sw.be/redhat/el6/en/$basearch/rpmforge"
+  mirrorlist "http://mirrorlist.repoforge.org/el6/mirrors-rpmforge"
+  enabled 0
+  key "RPM-GPG-KEY-rpmforge-dag"
+  action :create
+end
+
+yum_repository "rpmforge-extras" do
+  description "RHEL $releasever - RPMforge.net - extras"
+  url "http://apt.sw.be/redhat/el6/en/$basearch/extras"
+  mirrorlist "http://mirrorlist.repoforge.org/el6/mirrors-rpmforge-extras"
+  enabled 0
+  key "RPM-GPG-KEY-rpmforge-dag"
+  action :create
+end
+
+yum_repository "rpmforge-testing" do
+  description "RHEL $releasever - RPMforge.net - testing"
+  url "http://apt.sw.be/redhat/el6/en/$basearch/testing"
+  mirrorlist "http://mirrorlist.repoforge.org/el6/mirrors-rpmforge-testing"
+  enabled 0
+  key "RPM-GPG-KEY-rpmforge-dag"
+  action :create
+end
