@@ -55,4 +55,4 @@ SERVICE_WAITS=yes
 
 # set maximum time period (in seconds) for the yum-cron service to wait for
 # transactions to complete.  The default is 300 seconds (5 minutes)
-SERVICE_WAIT_TIME=300
+SERVICE_WAIT_TIME=<%= node[:yum][:cron][:service_wait_time] %>
